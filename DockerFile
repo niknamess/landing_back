@@ -1,0 +1,13 @@
+#build stage
+FROM golang:alpine AS builder
+LABEL Author:niknamess <nikitanuc@yandex.ru>
+RUN go version
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
+#RUN go get -d -v ./...
+#RUN go install github.com/swaggo/swag/cmd/swag@latest
+#RUN go test -v ./...
+#RUN swag init --parseDependency --parseInternal --parseDepth 1 -g .\cmd\sober-driver\main.go --output .\cmd\sober-driver\docs
+RUN  go build  -o app cmd/sober-driver/main.go
+CMD ["/app/app"]

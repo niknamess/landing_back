@@ -1,0 +1,150 @@
+definitions:
+  sober_driver_pkg_domain.Fio:
+    properties:
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+  sober_driver_pkg_domain.FormToAction:
+    properties:
+      description:
+        type: string
+      time:
+        type: string
+      user_id:
+        type: string
+      where_from:
+        type: string
+      where_to:
+        type: string
+    type: object
+  sober_driver_pkg_domain.FormsResponse:
+    properties:
+      forms:
+        items:
+          $ref: '#/definitions/sober_driver_pkg_domain.FormToAction'
+        type: array
+    type: object
+  sober_driver_pkg_domain.GetFormsRequest:
+    properties:
+      user_id:
+        type: string
+    type: object
+  sober_driver_pkg_domain.RegisterCheckRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  sober_driver_pkg_domain.RegisterRequest:
+    properties:
+      customer:
+        type: boolean
+      driver:
+        type: boolean
+      email:
+        type: string
+      fio:
+        $ref: '#/definitions/sober_driver_pkg_domain.Fio'
+      password:
+        type: string
+    type: object
+  sober_driver_pkg_domain.RegisterResponse:
+    properties:
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/form:
+    get:
+      consumes:
+      - application/json
+      description: получение формы
+      parameters:
+      - description: Ввести UserID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sober_driver_pkg_domain.GetFormsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sober_driver_pkg_domain.FormsResponse'
+      summary: получить формы по user id
+      tags:
+      - action
+  /api/v1/form/insert:
+    post:
+      consumes:
+      - application/json
+      description: запись в форму инпуты
+      parameters:
+      - description: Форма для заполнения
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sober_driver_pkg_domain.FormToAction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sober_driver_pkg_domain.RegisterResponse'
+      summary: записать в форму
+      tags:
+      - action
+  /api/v1/register:
+    post:
+      consumes:
+      - application/json
+      description: регистрация с проверкой
+      parameters:
+      - description: Ввести данные
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sober_driver_pkg_domain.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sober_driver_pkg_domain.RegisterResponse'
+      summary: регистрация пользователя
+      tags:
+      - user
+  /api/v1/register/check:
+    get:
+      consumes:
+      - application/json
+      description: проверка регистрации пользователя
+      parameters:
+      - description: Ввести Email
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sober_driver_pkg_domain.RegisterCheckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sober_driver_pkg_domain.RegisterResponse'
+      summary: проверка регистрации пользователя
+      tags:
+      - user
+swagger: "2.0"

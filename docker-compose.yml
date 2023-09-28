@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  landingback:
+    image: landingback
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 9000:9000
+    depends_on:
+        - mongodb
+    environment:
+        MONGODB_URI: mongodb://localhost:27017
+
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+   # environment:
+      #MONGO_INITDB_ROOT_USERNAME: root
+      #MONGO_INITDB_ROOT_PASSWORD: example
+    command: mongod --bind_ip mongodb
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo 10.10.10.60:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+

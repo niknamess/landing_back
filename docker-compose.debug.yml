@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  landingback:
+    image: landingback
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 9000:9000
+    environment:
+        MONGODB_URI: localhost:27017
+
+  mongodb:
+    image: mongo
+    command: ["--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: mongo --norc --quiet --host=localhost:27017 --eval "db.getMongo()"
+      interval: 30s
+      timeout: 2s
+      retries: 3
+      start_period: 15s
